@@ -12,6 +12,23 @@ public class UserServiceTest {
     @Test
     public void registerUser() {
         UserRepository repository = Mockito.mock(UserRepository.class);
+        when(repository.count()).thenReturn(0L);
+        UserService service = new UserService(repository);
+
+        User user = new User();
+        user.setName("Ruth");
+        user.setEmail("ruth@gmail.com");
+        user.setPassword("123456");
+
+        when(repository.save(user)).thenReturn(user);
+        User savedUser = service.register(user);
+
+        assertEquals("Ruth", savedUser.getName());
+    }
+
+    @Test
+    public void noRegisterUserWhenUserAlreadyExists() {
+        UserRepository repository = Mockito.mock(UserRepository.class);
         when(repository.count()).thenReturn(1L);
         UserService service = new UserService(repository);
 
@@ -20,14 +37,8 @@ public class UserServiceTest {
         user.setEmail("ruth@gmail.com");
         user.setPassword("123456");
 
-        //when(repository.save(user)).thenReturn(user);
-        //User savedUser = service.register(user);
-
-        RuntimeException exception = org.junit.jupiter.api.Assertions.assertThrows(
-                RuntimeException.class,
-                () -> service.register(user)        );
+        RuntimeException exception = org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class, () -> service.register(user)        );
 
         assertEquals("Já existe um usuário cadastrado", exception.getMessage());
-        //assertEquals("Ruth", savedUser.getName());
     }
 }
