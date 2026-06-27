@@ -14,6 +14,9 @@ public class UserService {
     }
 
     public User register(User user) {
+        if (repository.count()>0){
+            throw new RuntimeException("Já existe um usuário cadastrado");
+        }
         return repository.save(user);
     }
 }
