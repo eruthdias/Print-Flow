@@ -1,7 +1,9 @@
 package com.ruth.printflow.controller;
 
-import com.ruth.printflow.entity.User;
+import com.ruth.printflow.dto.UserRegisterRequest;
+import com.ruth.printflow.dto.UserResponse;
 import com.ruth.printflow.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +19,8 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
-        User savedUser = service.register(user);
+    public ResponseEntity<UserResponse> register(@RequestBody @Valid UserRegisterRequest request) {
+        UserResponse savedUser = service.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 }

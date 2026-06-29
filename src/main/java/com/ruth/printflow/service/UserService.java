@@ -1,5 +1,7 @@
 package com.ruth.printflow.service;
 
+import com.ruth.printflow.dto.UserRegisterRequest;
+import com.ruth.printflow.dto.UserResponse;
 import com.ruth.printflow.entity.User;
 import com.ruth.printflow.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,14 +18,22 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User register(User user) {
+    public UserResponse register(UserRegisterRequest request) {
         if (repository.count() > 0) {
             throw new RuntimeException("Já existe um usuário cadastrado");
         }
 
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
+        User user = new User();
+        user.setName(request.name());
+        user.setEmail(request.email());
+        user.setPassword(passwordEncoder.encode(request.password()));
 
-        return repository.save(user);
+        User savedUser = repository.save(user);
+
+        return new UserResponse(
+                savedUser.getId(),
+                savedUser.getName(),
+                savedUser.getEmail()
+        );
     }
 }
