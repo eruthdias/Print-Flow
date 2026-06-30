@@ -1,4 +1,4 @@
 package com.ruth.printflow.dto;
 
-public class AuthResponse {
+public class LoginResponse {
 }
