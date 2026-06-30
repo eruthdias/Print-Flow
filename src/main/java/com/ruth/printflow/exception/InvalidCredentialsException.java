@@ -1,4 +1,4 @@
-package com.ruth.printflow.exeption;
+package com.ruth.printflow.exception;
 
 public class InvalidCredentialsException extends RuntimeException {
 

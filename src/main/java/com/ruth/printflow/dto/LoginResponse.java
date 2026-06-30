@@ -1,4 +1,7 @@
 package com.ruth.printflow.dto;
 
-public class LoginResponse {
+public record LoginResponse(
+        String message,
+        String email
+) {
 }
