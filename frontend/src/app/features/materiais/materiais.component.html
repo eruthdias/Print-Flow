@@ -1,0 +1,45 @@
+<section class="page-shell">
+  <header class="page-header">
+    <div>
+      <h1>Materiais</h1>
+      <p>Consulte os materiais e a situação atual do estoque.</p>
+    </div>
+    <div class="acoes">
+      <a mat-stroked-button routerLink="/materiais/ajuste"><mat-icon>tune</mat-icon>Ajustar estoque</a>
+      <a mat-flat-button routerLink="/materiais/novo"><mat-icon>add</mat-icon>Novo material</a>
+    </div>
+  </header>
+
+  @if (materiais().length) {
+    <div class="mdb-list-grid">
+      @for (material of materiais(); track material.id; let i = $index) {
+        <article class="card mdb-list-card" data-aos="fade-up" [attr.data-aos-delay]="(i % 4) * 60">
+          <div class="card-body">
+            <div class="card-top">
+              <span class="icone"><mat-icon>inventory_2</mat-icon></span>
+              <span class="badge" [class.badge-warning]="material.estoque_baixo">
+                {{ material.ativo ? (material.estoque_baixo ? 'Estoque baixo' : 'Ativo') : 'Inativo' }}
+              </span>
+            </div>
+            <h2 class="card-title">{{ material.nome }}</h2>
+            <p class="estoque">{{ material.quantidade_atual | number:'1.0-3' }} <small>{{ material.unidade_base }} em estoque</small></p>
+            <dl>
+              <div><dt>Unidade de compra</dt><dd>{{ material.unidade_compra }}</dd></div>
+              <div><dt>Quantidade comprada</dt><dd>{{ material.fator_conversao | number:'1.0-3' }}</dd></div>
+              <div><dt>Valor de compra</dt><dd>{{ material.valor_compra | currency:'BRL' }}</dd></div>
+              <div><dt>Mínimo</dt><dd>{{ material.quantidade_minima | number:'1.0-3' }} {{ material.unidade_base }}</dd></div>
+              <div><dt>Custo unitário</dt><dd>{{ material.custo_unitario_base | currency:'BRL':'symbol':'1.2-4' }}</dd></div>
+            </dl>
+            <div class="acoes-card">
+              <button mat-stroked-button class="botao-excluir" type="button" (click)="excluir(material)" [disabled]="estaExcluindo(material.id)">
+                <mat-icon>delete_outline</mat-icon>{{ estaExcluindo(material.id) ? 'Excluindo...' : 'Excluir' }}
+              </button>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  } @else {
+    <div class="empty-state">Nenhum material cadastrado.</div>
+  }
+</section>

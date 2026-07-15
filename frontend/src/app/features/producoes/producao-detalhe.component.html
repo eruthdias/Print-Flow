@@ -1,0 +1,82 @@
+<section class="page-shell detalhe-producao">
+  <header class="page-header">
+    <div>
+      <h1>Detalhes da produção</h1>
+      <p>Materiais consumidos, valores e lucro real registrado.</p>
+    </div>
+    <a mat-button routerLink="/producoes"><mat-icon>arrow_back</mat-icon>Voltar</a>
+  </header>
+
+  @if (erro()) {
+    <div class="empty-state erro">{{ erro() }}</div>
+  } @else {
+    @if (producao(); as item) {
+      <div class="card cabecalho-producao" data-aos="fade-up">
+        <div class="identificacao">
+          <span class="icone-producao"><mat-icon>precision_manufacturing</mat-icon></span>
+          <div>
+            <small>Produção #{{ item.id }}</small>
+            <h2>{{ item.produto_nome }}</h2>
+            <time>{{ item.data_producao | date:'dd/MM/yyyy' }}</time>
+          </div>
+          <div class="quantidade">
+            <span>Quantidade produzida</span>
+            <strong>{{ item.quantidade_produzida | number:'1.0-3' }} unidades</strong>
+          </div>
+        </div>
+
+        <div class="resumo">
+          <div><span>Custo dos materiais</span><strong>{{ item.custo_materiais | currency:'BRL' }}</strong></div>
+          <div><span>Custo dos desperdícios</span><strong>{{ item.custo_desperdicios | currency:'BRL' }}</strong></div>
+          <div><span>Custo total</span><strong>{{ item.custo_total | currency:'BRL' }}</strong></div>
+          <div><span>Valor total</span><strong>{{ item.valor_total | currency:'BRL' }}</strong></div>
+          <div [class.negativo]="item.lucro_total < 0"><span>Lucro real</span><strong>{{ item.lucro_total | currency:'BRL' }}</strong></div>
+        </div>
+      </div>
+
+      <div class="card tabela-card" data-aos="fade-up" data-aos-delay="70">
+        <div class="card-body">
+          <h2>Materiais consumidos</h2>
+          <div class="tabela-responsiva">
+            <table>
+              <thead><tr><th>Material</th><th>Quantidade consumida</th><th>Custo unitário registrado</th><th>Custo total</th></tr></thead>
+              <tbody>
+                @for (material of item.itens; track material.material_id) {
+                  <tr>
+                    <td><strong>{{ material.material_nome }}</strong></td>
+                    <td>{{ material.quantidade_consumida | number:'1.0-3' }} {{ material.unidade_base }}</td>
+                    <td>{{ material.custo_unitario_snapshot | currency:'BRL':'symbol':'1.2-4' }}</td>
+                    <td><strong>{{ material.custo_total_item | currency:'BRL' }}</strong></td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      @if (item.desperdicios.length) {
+        <div class="card tabela-card perdas" data-aos="fade-up" data-aos-delay="120">
+          <div class="card-body">
+            <h2>Desperdícios registrados nesta produção</h2>
+            <div class="tabela-responsiva">
+              <table>
+                <thead><tr><th>Material</th><th>Quantidade</th><th>Motivo</th><th>Custo</th></tr></thead>
+                <tbody>
+                  @for (perda of item.desperdicios; track perda.id) {
+                    <tr>
+                      <td><strong>{{ perda.material_nome }}</strong></td>
+                      <td>{{ perda.quantidade_perdida | number:'1.0-3' }} {{ perda.unidade_base }}</td>
+                      <td>{{ perda.motivo }}</td>
+                      <td><strong>{{ perda.custo_perda | currency:'BRL' }}</strong></td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      }
+    }
+  }
+</section>

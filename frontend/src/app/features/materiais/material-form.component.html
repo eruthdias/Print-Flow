@@ -1,0 +1,11 @@
+<mat-card class="painel"><mat-card-header><mat-card-title>Novo Material</mat-card-title></mat-card-header><mat-card-content>
+  <form [formGroup]="form" (ngSubmit)="salvar()"><div class="grade">
+    <mat-form-field appearance="outline"><mat-label>Nome</mat-label><input matInput formControlName="nome" /></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Unidade de compra</mat-label><mat-select formControlName="unidade_compra">@for (u of unidades; track u) { <mat-option [value]="u">{{ u }}</mat-option> }</mat-select></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Unidade base</mat-label><mat-select formControlName="unidade_base">@for (u of unidades; track u) { <mat-option [value]="u">{{ u }}</mat-option> }</mat-select></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Quantidade comprada</mat-label><input matInput type="number" formControlName="fator_conversao" /><mat-hint>Ex.: 500 folhas</mat-hint></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Valor total pago</mat-label><input matInput type="number" formControlName="valor_compra" /><mat-hint>Ex.: R$ 35,00</mat-hint></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Quantidade atual</mat-label><input matInput type="number" formControlName="quantidade_atual" /></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Quantidade mínima</mat-label><input matInput type="number" formControlName="quantidade_minima" /></mat-form-field>
+  </div><p><strong>Valor unitário calculado:</strong> {{ custoUnitarioPrevisto() | currency:'BRL':'symbol':'1.2-4' }} por {{ form.controls.unidade_base.value || 'unidade' }}</p>@if (erro()) { <p class="erro">{{ erro() }}</p> }<div class="acoes"><button mat-button type="reset">Cancelar</button><button mat-flat-button type="submit" [disabled]="enviando()">Salvar Material</button></div></form>
+</mat-card-content></mat-card>

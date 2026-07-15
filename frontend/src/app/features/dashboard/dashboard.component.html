@@ -1,0 +1,27 @@
+<section class="pagina-dashboard">
+  <header><div><h1>Dashboard</h1><p>Quantidades totais cadastradas no sistema</p></div></header>
+  @if (erro()) { <p class="erro">{{ erro() }}</p> }
+  @if (resumo(); as dados) {
+    <div class="conteudo">
+      <div>
+        <div class="indicadores">
+          <mat-card class="painel"><mat-card-content><mat-icon>inventory_2</mat-icon><span>Materiais</span><strong>{{ dados.total_materiais }}</strong><small>Total cadastrado</small></mat-card-content></mat-card>
+          <mat-card class="painel"><mat-card-content><mat-icon>category</mat-icon><span>Produtos</span><strong>{{ dados.total_produtos }}</strong><small>Total cadastrado</small></mat-card-content></mat-card>
+          <mat-card class="painel"><mat-card-content><mat-icon>precision_manufacturing</mat-icon><span>Produções</span><strong>{{ dados.producoes_realizadas }}</strong><small>Total no período</small></mat-card-content></mat-card>
+          <mat-card class="painel"><mat-card-content><mat-icon>payments</mat-icon><span>Lucro estimado</span><strong>{{ dados.lucro_estimado | currency:'BRL' }}</strong><small>Total no período</small></mat-card-content></mat-card>
+        </div>
+        <div class="containers-listagem">
+          <mat-card class="painel container-lista"><mat-card-header><mat-card-title>Materiais</mat-card-title><a mat-button routerLink="/materiais">Ver todos <mat-icon>arrow_forward</mat-icon></a></mat-card-header><mat-card-content>
+            @for (material of materiais(); track material.id) { <div class="linha"><div><strong>{{material.nome}}</strong><small>{{material.quantidade_atual|number:'1.0-3'}} {{material.unidade_base}}</small></div><span [class.alerta]="material.estoque_baixo">{{material.estoque_baixo?'Estoque baixo':'Disponível'}}</span></div> } @empty { <div class="vazio">Nenhum material cadastrado.</div> }
+          </mat-card-content></mat-card>
+          <mat-card class="painel container-lista"><mat-card-header><mat-card-title>Produtos</mat-card-title><a mat-button routerLink="/produtos">Ver todos <mat-icon>arrow_forward</mat-icon></a></mat-card-header><mat-card-content>
+            @for (produto of produtos(); track produto.id) { <a class="linha" [routerLink]="['/produtos',produto.id]"><div class="miniatura">@if(produto.imagem_url){<img [src]="produto.imagem_url" [alt]="produto.nome"/>}@else{<mat-icon>image</mat-icon>}</div><div><strong>{{produto.nome}}</strong><small>{{produto.preco_venda|currency:'BRL'}}</small></div></a> } @empty { <div class="vazio">Nenhum produto cadastrado.</div> }
+          </mat-card-content></mat-card>
+        </div>
+      </div>
+      <aside>
+        <mat-card class="painel acoes"><mat-card-header><mat-card-title>Ações rápidas</mat-card-title><mat-icon>star_outline</mat-icon></mat-card-header><mat-card-content><a mat-stroked-button routerLink="/materiais/novo"><mat-icon>inventory_2</mat-icon>Novo Material</a><a mat-stroked-button routerLink="/materiais/ajuste"><mat-icon>edit_note</mat-icon>Ajuste Estoque</a><a mat-stroked-button routerLink="/produtos/novo"><mat-icon>category</mat-icon>Novo Produto</a><a mat-stroked-button routerLink="/producoes/nova"><mat-icon>precision_manufacturing</mat-icon>Nova Produção</a></mat-card-content></mat-card>
+      </aside>
+    </div>
+  }
+</section>

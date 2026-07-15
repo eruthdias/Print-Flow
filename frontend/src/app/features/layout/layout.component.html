@@ -1,0 +1,25 @@
+<mat-sidenav-container class="layout-container">
+  <mat-sidenav mode="side" opened class="layout-sidenav">
+    <div class="marca">
+      <img src="assets/images/logo.png" alt="Logo Copy Print" />
+      <span>Sistema de gestão para gráficas</span>
+    </div>
+    <mat-nav-list>
+      @for (item of itensMenu; track item.rota) {
+        <a mat-list-item [routerLink]="item.rota" routerLinkActive="ativo">
+          <mat-icon matListItemIcon>{{ item.icone }}</mat-icon>
+          <span matListItemTitle>{{ item.rotulo }}</span>
+        </a>
+      }
+    </mat-nav-list>
+    <div class="perfil">
+      <mat-icon>person</mat-icon>
+      <div><strong>Administrador</strong><small>Conta do sistema</small></div>
+      <button mat-icon-button type="button" title="Sair" aria-label="Sair" (click)="sair()"><mat-icon>logout</mat-icon></button>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <main class="layout-content"><router-outlet /></main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

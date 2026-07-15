@@ -1,0 +1,59 @@
+<section class="page-shell">
+  <header class="page-header">
+    <div>
+      <h1>Produtos</h1>
+      <p>Consulte produtos, valores, composição e mídias.</p>
+    </div>
+    <div class="acoes">
+      <a mat-flat-button routerLink="/produtos/novo"><mat-icon>add</mat-icon>Novo produto</a>
+    </div>
+  </header>
+
+  @if (erro()) { <p class="mensagem-erro">{{ erro() }}</p> }
+
+  @if (!carregando() && produtos().length) {
+    <div class="mdb-list-grid">
+      @for (produto of produtos(); track produto.id; let i = $index) {
+        <article class="card mdb-list-card" data-aos="fade-up" [attr.data-aos-delay]="(i % 4) * 60">
+          <div class="imagem-produto">
+            @if (produto.imagem_url) {
+              <img [src]="produto.imagem_url" [alt]="produto.nome" />
+            } @else {
+              <mat-icon>image</mat-icon><span>Sem imagem</span>
+            }
+          </div>
+
+          <div class="card-body">
+            <div class="titulo">
+              <h2>{{ produto.nome }}</h2>
+              <span>{{ produto.ativo ? 'Ativo' : 'Inativo' }}</span>
+            </div>
+            <strong class="preco">{{ produto.preco_venda | currency:'BRL' }}</strong>
+            <div class="valores">
+              <small>Custo {{ produto.custo_producao | currency:'BRL' }}</small>
+              <small>Lucro {{ produto.lucro_estimado | currency:'BRL' }}</small>
+            </div>
+
+            <div class="acoes-card">
+              <a mat-flat-button [routerLink]="['/produtos', produto.id]"><mat-icon>visibility</mat-icon>Detalhar</a>
+              <input #imagem hidden type="file" accept="image/jpeg,image/png,image/webp" (change)="selecionarArquivo(produto, 'imagem', $event)" />
+              <button mat-icon-button type="button" title="Trocar imagem" (click)="imagem.click()" [disabled]="processando(produto.id, 'imagem') || estaExcluindo(produto.id)">
+                <mat-icon>add_photo_alternate</mat-icon>
+              </button>
+              @if (produto.imagem_url) {
+                <button mat-icon-button type="button" title="Remover imagem" (click)="removerMidia(produto, 'imagem')" [disabled]="estaExcluindo(produto.id)">
+                  <mat-icon>hide_image</mat-icon>
+                </button>
+              }
+              <button mat-stroked-button class="botao-excluir" type="button" (click)="excluir(produto)" [disabled]="estaExcluindo(produto.id)">
+                <mat-icon>delete_outline</mat-icon>{{ estaExcluindo(produto.id) ? 'Excluindo...' : 'Excluir' }}
+              </button>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  } @else if (!carregando()) {
+    <div class="empty-state">Nenhum produto cadastrado.</div>
+  }
+</section>

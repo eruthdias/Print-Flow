@@ -1,0 +1,82 @@
+<section class="page-shell detalhe-produto">
+  <header class="page-header">
+    <div>
+      <h1>Detalhes do produto</h1>
+      <p>Composição, custos e lucro por unidade produzida.</p>
+    </div>
+    <a mat-button routerLink="/produtos"><mat-icon>arrow_back</mat-icon>Voltar</a>
+  </header>
+
+  @if (erro()) {
+    <div class="empty-state erro">{{ erro() }}</div>
+  } @else {
+    @if (produto(); as item) {
+    <div class="cabecalho-produto card mdb-list-card" data-aos="fade-up">
+      <div class="imagem">
+        @if (item.imagem_url) {
+          <img [src]="item.imagem_url" [alt]="item.nome" />
+        } @else {
+          <mat-icon>image</mat-icon>
+        }
+      </div>
+
+      <div class="card-body">
+        <span class="status">{{ item.ativo ? 'Ativo' : 'Inativo' }}</span>
+        <h2>{{ item.nome }}</h2>
+        <div class="resumo">
+          <div>
+            <span>Preço de venda</span>
+            <strong>{{ item.preco_venda | currency:'BRL' }}</strong>
+          </div>
+          <div>
+            <span>Custo total do produto</span>
+            <strong>{{ item.custo_producao | currency:'BRL' }}</strong>
+          </div>
+          <div [class.negativo]="item.lucro_estimado < 0">
+            <span>Lucro estimado</span>
+            <strong>{{ item.lucro_estimado | currency:'BRL' }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card composicao" data-aos="fade-up" data-aos-delay="80">
+      <div class="card-body">
+        <h2>Materiais utilizados por unidade</h2>
+
+        @if (item.composicao.length) {
+          <div class="tabela-responsiva">
+            <table>
+              <thead>
+                <tr>
+                  <th>Material</th>
+                  <th>Valor total pago</th>
+                  <th>Quantidade comprada</th>
+                  <th>Valor unitário</th>
+                  <th>Quantidade utilizada</th>
+                  <th>Gasto no produto</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (material of item.composicao; track material.material_id) {
+                  <tr>
+                    <td><strong>{{ material.material_nome }}</strong></td>
+                    <td>{{ material.valor_compra | currency:'BRL' }}</td>
+                    <td>{{ material.quantidade_por_compra | number:'1.0-3' }} {{ material.unidade_base }}</td>
+                    <td>{{ material.custo_unitario_base | currency:'BRL':'symbol':'1.2-4' }}</td>
+                    <td>{{ material.quantidade_utilizada | number:'1.0-3' }} {{ material.unidade_base }}</td>
+                    <td><strong>{{ material.custo_item | currency:'BRL' }}</strong></td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          <p class="formula"><mat-icon>calculate</mat-icon> Gasto no produto = valor unitário × quantidade utilizada.</p>
+        } @else {
+          <p class="sem-composicao">Este produto não possui materiais na composição.</p>
+        }
+      </div>
+    </div>
+    }
+  }
+</section>

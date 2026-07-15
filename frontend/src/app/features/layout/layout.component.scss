@@ -1,0 +1,15 @@
+.layout-container { height: 100vh; padding: 8px; background: linear-gradient(135deg, #eef8ff 0%, #f8fcff 100%); }
+.layout-sidenav { width: 280px; padding: 12px; border: 1px solid #d7e8f8; border-radius: 8px; background: rgba(255, 255, 255, .98); }
+.marca { display: grid; gap: 6px; padding-bottom: 12px; border-bottom: 1px solid #edf3f9; }
+.marca img { width: 150px; max-width: 100%; height: auto; }
+.marca span { color: #667085; font-size: .78rem; }
+mat-nav-list { margin-top: 10px; }
+a[mat-list-item] { min-height: 42px; margin: 4px 0; border-radius: 7px; color: #25324a; font-size: .9rem; font-weight: 700; }
+a[mat-list-item]:hover, a.ativo { color: #1264cf; background: #edf6ff; }
+.perfil { position: absolute; left: 12px; right: 12px; bottom: 12px; display: flex; align-items: center; gap: 8px; padding: 8px; border: 1px solid #d7e8f8; border-radius: 8px; background: #f6fbff; }
+.perfil > mat-icon { display: grid; place-items: center; width: 32px; height: 32px; color: #1264cf; border-radius: 50%; background: #e9f4ff; }
+.perfil div { flex: 1; min-width: 0; } .perfil strong, .perfil small { display: block; } .perfil strong { font-size: .8rem; } .perfil small { color: #667085; font-size: .67rem; }
+.perfil button { color: #667085; background: #fff; border: 1px solid #d7e8f8; border-radius: 7px; }
+.perfil button:hover { color: #b42318; background: #fff4f2; border-color: #ffd5cf; }
+.layout-content { min-height: calc(100vh - 16px); box-sizing: border-box; padding-left: 8px; background: transparent; }
+@media (max-width: 800px) { .layout-sidenav { width: 220px; } .marca img { width: 132px; } }

@@ -1,0 +1,39 @@
+<section class="page-shell">
+  <header class="page-header">
+    <div>
+      <h1>Produções</h1>
+      <p>Histórico de produções, custos e lucro real.</p>
+    </div>
+    <a mat-flat-button routerLink="/producoes/nova"><mat-icon>add</mat-icon>Nova produção</a>
+  </header>
+
+  @if (producoes().length) {
+    <div class="mdb-list-grid">
+      @for (producao of producoes(); track producao.id; let i = $index) {
+        <article class="card mdb-list-card" data-aos="fade-up" [attr.data-aos-delay]="(i % 4) * 60">
+          <div class="card-body">
+            <div class="top">
+              <span class="icone"><mat-icon>precision_manufacturing</mat-icon></span>
+              <time>{{ producao.data_producao | date:'dd/MM/yyyy' }}</time>
+            </div>
+            <h2>{{ producao.produto_nome }}</h2>
+            <p class="quantidade">{{ producao.quantidade_produzida | number:'1.0-3' }} unidades</p>
+            <dl>
+              <div><dt>Materiais</dt><dd>{{ producao.custo_materiais | currency:'BRL' }}</dd></div>
+              <div><dt>Desperdícios</dt><dd>{{ producao.custo_desperdicios | currency:'BRL' }}</dd></div>
+              <div><dt>Custo real</dt><dd>{{ producao.custo_total | currency:'BRL' }}</dd></div>
+              <div><dt>Valor</dt><dd>{{ producao.valor_total | currency:'BRL' }}</dd></div>
+              <div class="lucro" [class.negativo]="producao.lucro_total < 0"><dt>Lucro real</dt><dd>{{ producao.lucro_total | currency:'BRL' }}</dd></div>
+            </dl>
+            <div class="acoes-card">
+              <a mat-flat-button [routerLink]="['/producoes', producao.id]"><mat-icon>visibility</mat-icon>Detalhar</a>
+              <button mat-button type="button" (click)="estornar(producao)"><mat-icon>undo</mat-icon>Estornar</button>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  } @else {
+    <div class="empty-state">Nenhuma produção registrada.</div>
+  }
+</section>

@@ -1,0 +1,36 @@
+[project]
+name = "printflow-backend"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.18.5",
+    "asyncpg>=0.31.0",
+    "bcrypt==4.0.1",
+    "email-validator>=2.3.0",
+    "fastapi>=0.139.0",
+    "passlib[bcrypt]>=1.7.4",
+    "pydantic-settings>=2.14.2",
+    "pyjwt>=2.13.0",
+    "python-multipart>=0.0.32",
+    "sqlalchemy[asyncio]>=2.0.51",
+    "uvicorn[standard]>=0.49.0",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "pytest-cov>=7.1.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+
+[tool.coverage.run]
+concurrency = ["greenlet", "thread"]
+omit = ["app/seed.py"]

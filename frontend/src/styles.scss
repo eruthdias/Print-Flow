@@ -1,0 +1,45 @@
+@import 'mdb-angular-ui-kit/assets/scss/mdb.scss';
+@import 'aos/dist/aos.css';
+
+html, body { min-height: 100%; }
+body { margin: 0; color: #16213a; background: #f8fcff; font-family: "Trebuchet MS", Arial, sans-serif; }
+* { box-sizing: border-box; }
+h1, h2, h3 { color: #17233b; }
+
+.painel, .mat-mdc-card { border: 1.5px solid #b7d8fb !important; border-radius: 8px !important; background: rgba(255, 255, 255, .97) !important; box-shadow: 0 10px 25px rgba(36, 75, 114, .05) !important; }
+
+.mat-mdc-form-field { --mdc-outlined-text-field-container-shape: 7px; --mdc-outlined-text-field-outline-color: #a9cff7; --mdc-outlined-text-field-hover-outline-color: #73b4ff; --mdc-outlined-text-field-focus-outline-color: #2f7ee7; --mdc-outlined-text-field-focus-outline-width: 1.5px; --mdc-outlined-text-field-label-text-color: #52627a; --mdc-outlined-text-field-focus-label-text-color: #1264cf; }
+.mat-mdc-form-field .mat-mdc-text-field-wrapper { background: #fff; border-radius: 7px; }
+.mat-mdc-form-field input, .mat-mdc-form-field textarea, .mat-mdc-select { color: #17233b !important; }
+
+.mat-mdc-unelevated-button { --mdc-filled-button-container-color: #2f7ee7; --mdc-filled-button-label-text-color: #fff; border-radius: 7px !important; }
+.mat-mdc-unelevated-button:hover { --mdc-filled-button-container-color: #1264cf; }
+.mat-mdc-outlined-button { --mdc-outlined-button-outline-color: #75b7ff; --mdc-outlined-button-label-text-color: #1264cf; border-radius: 7px !important; background: #fff !important; }
+.mat-mdc-outlined-button:hover { background: #edf6ff !important; }
+.mat-mdc-button { --mdc-text-button-label-text-color: #1264cf; }
+
+.mensagem-sucesso .mdc-snackbar__surface { background: #2c9b58 !important; }
+.mensagem-erro .mdc-snackbar__surface { background: #f04464 !important; }
+.mensagem-sucesso .mdc-snackbar__label, .mensagem-erro .mdc-snackbar__label { color: #fff !important; }
+
+.mdb-list-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.mdb-list-card { height: 100%; overflow: hidden; border: 1.5px solid #b7d8fb; border-radius: 10px; background: #fff; box-shadow: 0 8px 22px rgba(36,75,114,.07); transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+.mdb-list-card:hover { transform: translateY(-4px); border-color: #75b7ff; box-shadow: 0 14px 30px rgba(47,126,231,.13); }
+.mdb-list-card .card-body { padding: 18px; }
+.page-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 4px 0 22px; }
+.page-header h1 { margin: 0 0 4px; }
+.page-header p { margin: 0; color: #667085; }
+.page-shell { max-width: 1320px; margin: 0 auto; }
+.form-page { width: 100%; max-width: 780px; margin-inline: auto; }
+.form-page app-material-form, .form-page app-estoque-form, .form-page app-produto-form { display: block; width: 100%; }
+.empty-state { padding: 36px; text-align: center; color: #667085; border: 1.5px dashed #b7d8fb; border-radius: 10px; background: #fff; }
+
+.form-page .mat-mdc-form-field { width: 100%; --mat-form-field-container-height: 44px; --mat-form-field-container-vertical-padding: 10px; font-size: .88rem; }
+.form-page .mat-mdc-form-field:not(.campo-textarea) .mat-mdc-text-field-wrapper,
+.form-page .mat-mdc-form-field:not(.campo-textarea) .mat-mdc-form-field-flex { height: 44px; min-height: 44px; }
+.form-page .mat-mdc-form-field:not(.campo-textarea) .mat-mdc-form-field-infix { min-height: 44px !important; padding-top: 10px !important; padding-bottom: 8px !important; }
+.form-page .mat-mdc-form-field-hint { color: #718096; font-size: .7rem; }
+.form-page .campo-textarea { --mat-form-field-container-height: 96px; --mat-form-field-container-vertical-padding: 12px; }
+.form-page .campo-textarea .mat-mdc-text-field-wrapper, .form-page .campo-textarea .mat-mdc-form-field-flex { min-height: 96px; }
+.form-page .campo-textarea .mat-mdc-form-field-infix { min-height: 96px !important; padding-top: 14px !important; padding-bottom: 10px !important; }
+.form-page .campo-textarea textarea.mat-mdc-input-element { min-height: 68px; }

@@ -1,0 +1,68 @@
+<mat-card class="painel cadastro">
+  <mat-card-header><mat-card-title>Novo Produto</mat-card-title></mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="salvar()">
+      <div class="topo">
+        <div class="dados-principais">
+          <mat-form-field appearance="outline">
+            <mat-label>Nome</mat-label>
+            <input matInput formControlName="nome" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Preço de venda</mat-label>
+            <input matInput type="number" formControlName="preco_venda" />
+          </mat-form-field>
+        </div>
+
+        <div class="foto">
+          <input #arquivo hidden type="file" accept="image/jpeg,image/png,image/webp" (change)="selecionar($event)" />
+          <button class="upload-imagem" type="button" (click)="arquivo.click()">
+            <span class="preview">
+              @if (preview()) { <img [src]="preview()" alt="Prévia do produto" /> }
+              @else { <mat-icon>add_photo_alternate</mat-icon> }
+            </span>
+            <span class="upload-texto">
+              <strong>{{ imagem() ? 'Trocar imagem' : 'Selecionar imagem' }}</strong>
+              <small>{{ imagem()?.name || 'JPEG, PNG ou WebP · até 5 MB' }}</small>
+            </span>
+            <mat-icon class="upload-icone">upload</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <h3>Composição por unidade do produto</h3>
+      <div formArrayName="composicao">
+        @for (item of form.controls.composicao.controls; track $index; let i = $index) {
+          <div class="item" [formGroupName]="i">
+            <mat-form-field appearance="outline" class="campo-material">
+              <mat-label>Material</mat-label>
+              <mat-select formControlName="material_id">
+                @for (material of materiais(); track material.id) {
+                  <mat-option [value]="material.id">
+                    {{ material.nome }} — {{ material.valor_compra | currency:'BRL' }} ÷ {{ material.fator_conversao | number:'1.0-3' }} = {{ material.custo_unitario_base | currency:'BRL':'symbol':'1.2-4' }}/{{ material.unidade_base }}
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="campo-quantidade">
+              <mat-label>Quantidade usada por produto</mat-label>
+              <input matInput type="number" formControlName="quantidade_utilizada" />
+            </mat-form-field>
+            <strong class="gasto-item">Gasto: {{ custoItemPrevisto(i) | currency:'BRL' }}</strong>
+            <button mat-icon-button class="remover-material" type="button" aria-label="Remover material" title="Remover material" (click)="remover(i)">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+
+      <button mat-button type="button" (click)="adicionar()"><mat-icon>add</mat-icon>Adicionar material</button>
+      <div class="previsao">
+        <div><span>Custo previsto</span><strong>{{ custoPrevisto() | currency:'BRL' }}</strong></div>
+        <div [class.negativo]="lucroPrevisto() < 0"><span>Lucro previsto</span><strong>{{ lucroPrevisto() | currency:'BRL' }}</strong></div>
+      </div>
+      @if (erro()) { <p class="erro">{{ erro() }}</p> }
+      <div class="acoes"><button mat-flat-button type="submit" [disabled]="enviando()">Salvar Produto</button></div>
+    </form>
+  </mat-card-content>
+</mat-card>

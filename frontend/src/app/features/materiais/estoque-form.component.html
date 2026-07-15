@@ -1,0 +1,34 @@
+<mat-card class="painel">
+  <mat-card-header><mat-card-title>Ajuste de Estoque</mat-card-title></mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="salvar()">
+      <mat-form-field appearance="outline" class="inteiro">
+        <mat-label>Material</mat-label>
+        <mat-select formControlName="material_id">
+          @for (material of materiais; track material.id) {
+            <mat-option [value]="material.id">{{ material.nome }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <div class="grade">
+        <mat-form-field appearance="outline">
+          <mat-label>Quantidade</mat-label>
+          <input matInput type="number" formControlName="quantidade" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Operação</mat-label>
+          <mat-select formControlName="operacao">
+            <mat-option value="entrada">Entrada</mat-option>
+            <mat-option value="saida">Saída</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <mat-form-field appearance="outline" class="inteiro campo-textarea">
+        <mat-label>Observação</mat-label>
+        <textarea matInput formControlName="observacao" rows="4"></textarea>
+      </mat-form-field>
+      @if (erro()) { <p class="erro">{{ erro() }}</p> }
+      <div class="acoes"><button mat-flat-button type="submit" [disabled]="enviando()">Salvar Ajuste</button></div>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,97 @@
+<section class="page-shell form-page">
+  <header class="page-header">
+    <div>
+      <h1>Nova produção</h1>
+      <p>O consumo normal e os desperdícios baixam o estoque automaticamente.</p>
+    </div>
+    <a mat-button routerLink="/producoes"><mat-icon>arrow_back</mat-icon>Voltar</a>
+  </header>
+
+  <mat-card class="painel">
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="salvar()">
+        <div class="campos-principais">
+          <mat-form-field appearance="outline">
+            <mat-label>Produto</mat-label>
+            <mat-select formControlName="produto_id">
+              @for (produto of produtos(); track produto.id) {
+                <mat-option [value]="produto.id">{{ produto.nome }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Quantidade produzida</mat-label>
+            <input matInput type="number" min="0.001" formControlName="quantidade_produzida" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Data</mat-label>
+            <input matInput type="date" formControlName="data_producao" />
+          </mat-form-field>
+        </div>
+
+        @if (form.controls.desperdicios.length) {
+          <section class="secao-desperdicios">
+            <div class="secao-titulo">
+              <div>
+                <h2>Desperdícios desta produção</h2>
+                <p>Preencha somente o que foi perdido além do consumo normal.</p>
+              </div>
+              <span>Opcional</span>
+            </div>
+
+            <div formArrayName="desperdicios" class="lista-desperdicios">
+              @for (perda of form.controls.desperdicios.controls; track perda.controls.material_id.value; let i = $index) {
+                <div class="perda" [formGroupName]="i">
+                  <div class="material-info">
+                    <span class="material-icone"><mat-icon>inventory_2</mat-icon></span>
+                    <div>
+                      <strong>{{ material(perda)?.material_nome }}</strong>
+                      <small>
+                        Consumo normal: {{ consumoNormal(perda) | number:'1.0-3' }} {{ material(perda)?.unidade_base }}
+                        · {{ material(perda)?.custo_unitario_base | currency:'BRL':'symbol':'1.2-4' }} por {{ material(perda)?.unidade_base }}
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="campos-perda">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Quantidade perdida</mat-label>
+                      <input matInput type="number" min="0" formControlName="quantidade_perdida" />
+                      <span matTextSuffix>&nbsp;{{ material(perda)?.unidade_base }}</span>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Motivo da perda</mat-label>
+                      <input matInput formControlName="motivo" maxlength="255" placeholder="Ex.: corte errado" />
+                      @if (perda.controls.motivo.hasError('required')) {
+                        <mat-error>Informe o motivo</mat-error>
+                      } @else if (perda.controls.motivo.hasError('maxlength')) {
+                        <mat-error>Use no máximo 255 caracteres</mat-error>
+                      }
+                    </mat-form-field>
+                    <div class="custo-perda">
+                      <span>Custo da perda</span>
+                      <strong>{{ custoPerda(perda) | currency:'BRL' }}</strong>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </section>
+
+          <div class="resumo-financeiro">
+            <div><span>Materiais</span><strong>{{ custoMateriais() | currency:'BRL' }}</strong></div>
+            <div><span>Desperdícios</span><strong>{{ custoDesperdicios() | currency:'BRL' }}</strong></div>
+            <div><span>Custo real</span><strong>{{ custoReal() | currency:'BRL' }}</strong></div>
+            <div [class.negativo]="lucroReal() < 0"><span>Lucro real</span><strong>{{ lucroReal() | currency:'BRL' }}</strong></div>
+          </div>
+        }
+
+        <div class="acoes">
+          <button mat-flat-button type="submit" [disabled]="enviando()">
+            {{ enviando() ? 'Registrando...' : 'Registrar produção' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</section>
