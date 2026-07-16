@@ -36,10 +36,6 @@ class ProducaoCreateRequest(BaseModel):
         return v
 
 
-class ProducaoUpdateRequest(ProducaoCreateRequest):
-    pass
-
-
 class ProducaoItemOut(BaseModel):
     material_id: int
     material_nome: str

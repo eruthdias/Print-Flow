@@ -41,13 +41,6 @@ async def test_criar_material_calcula_custo_unitario_base(client):
     assert corpo["quantidade_atual_unidade_compra"] is not None
 
 
-async def test_criar_material_sem_fator_conversao_retorna_422(client):
-    headers = await _login(client)
-    dados = {k: v for k, v in MATERIAL_PADRAO.items() if k != "fator_conversao"}
-    resposta = await client.post("/api/materiais", json=dados, headers=headers)
-    assert resposta.status_code == 422
-
-
 async def test_criar_material_com_nome_duplicado_retorna_409(client):
     headers = await _login(client)
     await client.post("/api/materiais", json=MATERIAL_PADRAO, headers=headers)

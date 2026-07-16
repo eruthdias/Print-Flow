@@ -41,8 +41,6 @@ export interface MaterialRequest {
   quantidade_minima: number;
 }
 
-export type MaterialUpdatePayload = Omit<MaterialRequest, 'quantidade_atual'>;
-
 @Injectable({ providedIn: 'root' })
 export class MateriaisService {
   private readonly http = inject(HttpClient);
@@ -61,10 +59,6 @@ export class MateriaisService {
 
   criar(dados: MaterialRequest): Observable<Material> {
     return this.http.post<Material>('/api/materiais', dados);
-  }
-
-  atualizar(materialId: number, dados: MaterialUpdatePayload): Observable<Material> {
-    return this.http.put<Material>(`/api/materiais/${materialId}`, dados);
   }
 
   excluir(materialId: number): Observable<void> {

@@ -126,6 +126,8 @@ async def atualizar(db: AsyncSession, produto_id: int, dados: ProdutoUpdateReque
     await _validar_composicao(db, dados.composicao)
     produto.nome = dados.nome
     produto.preco_venda = dados.preco_venda
+    produto.composicao.clear()
+    await db.flush()
     produto.composicao = [
         ProdutoMaterial(material_id=item.material_id, quantidade_utilizada=item.quantidade_utilizada)
         for item in dados.composicao

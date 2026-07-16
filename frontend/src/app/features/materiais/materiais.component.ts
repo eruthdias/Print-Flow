@@ -2,48 +2,26 @@ import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { finalize } from 'rxjs';
 import { FeedbackService } from '../../core/feedback.service';
 import { Material, MateriaisService } from './materiais.service';
-import { MaterialFormDialogComponent } from './material-form-dialog.component';
 
 @Component({
   selector: 'app-materiais',
   standalone: true,
-  imports: [CurrencyPipe, DecimalPipe, RouterLink, MatButtonModule, MatDialogModule, MatIconModule],
+  imports: [CurrencyPipe, DecimalPipe, RouterLink, MatButtonModule, MatIconModule],
   templateUrl: './materiais.component.html',
   styleUrl: './materiais.component.scss',
 })
 export class MateriaisComponent implements OnInit {
   private readonly service = inject(MateriaisService);
   private readonly feedback = inject(FeedbackService);
-  private readonly dialog = inject(MatDialog);
 
   protected readonly materiais = signal<Material[]>([]);
   protected readonly excluindo = signal(new Set<number>());
 
   ngOnInit(): void {
-    this.carregar();
-  }
-
-  protected abrirCriacao(): void {
-    this.abrirDialog();
-  }
-
-  protected abrirEdicao(material: Material): void {
-    this.abrirDialog(material);
-  }
-
-  private abrirDialog(material?: Material): void {
-    const ref = this.dialog.open(MaterialFormDialogComponent, { width: '640px', data: { material } });
-    ref.afterClosed().subscribe((salvou) => {
-      if (salvou) { this.carregar(); }
-    });
-  }
-
-  private carregar(): void {
     this.service.listar().subscribe({
       next: ({ items }) => this.materiais.set(items),
       error: (erro) => this.feedback.erro(

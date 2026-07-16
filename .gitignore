@@ -10,16 +10,17 @@ backend/__pycache__/
 .coverage
 htmlcov/
 backend/uploads/
-*.log
 
 # Frontend (Angular / Node)
 frontend/node_modules/
 frontend/dist/
 frontend/.angular/
 npm-debug.log*
+*.log
 
-# Docs (kept locally, not tracked)
-docs/
+# Local consolidation/runtime directories
+_consolidacao/
+PrintFlow/
 
 # Editors / OS
 .vscode/

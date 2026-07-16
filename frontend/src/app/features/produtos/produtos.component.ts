@@ -4,26 +4,23 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { finalize } from 'rxjs';
 
 import { Produto, ProdutosService, TipoMidia } from './produtos.service';
-import { ProdutoFormDialogComponent } from './produto-form-dialog.component';
 import { FeedbackService } from '../../core/feedback.service';
 
 @Component({
   selector: 'app-produtos',
   standalone: true,
-  imports: [CurrencyPipe, RouterLink, MatButtonModule, MatCardModule, MatDialogModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [CurrencyPipe, RouterLink, MatButtonModule, MatCardModule, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './produtos.component.html',
   styleUrl: './produtos.component.scss',
 })
 export class ProdutosComponent implements OnInit {
   private readonly produtosService = inject(ProdutosService);
   private readonly feedback = inject(FeedbackService);
-  private readonly dialog = inject(MatDialog);
 
   protected readonly produtos = signal<Produto[]>([]);
   protected readonly carregando = signal(true);
@@ -32,21 +29,6 @@ export class ProdutosComponent implements OnInit {
 
   ngOnInit(): void {
     this.carregarProdutos();
-  }
-
-  protected abrirCriacao(): void {
-    this.abrirDialog();
-  }
-
-  protected abrirEdicao(produto: Produto): void {
-    this.abrirDialog(produto);
-  }
-
-  private abrirDialog(produto?: Produto): void {
-    const ref = this.dialog.open(ProdutoFormDialogComponent, { width: '720px', data: { produto } });
-    ref.afterClosed().subscribe((salvou) => {
-      if (salvou) { this.carregarProdutos(); }
-    });
   }
 
   protected carregarProdutos(): void {

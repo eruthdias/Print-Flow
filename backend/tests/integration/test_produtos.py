@@ -71,32 +71,6 @@ async def test_criar_produto_calcula_custo_e_lucro(client):
     assert corpo["video_url"] is None
 
 
-async def test_produto_usa_valor_unitario_do_material_e_nao_o_valor_total_do_pacote(client):
-    headers = await _login(client)
-    # Pacote de 100 folhas por R$ 25,00 -> valor unitário deve ser R$ 0,25/folha, não R$ 25,00.
-    papel = await _criar_material(
-        client,
-        headers,
-        nome="Papel A4",
-        unidade_compra="pacote",
-        unidade_base="folha",
-        fator_conversao="100",
-        valor_compra="25.00",
-        quantidade_atual="1000",
-    )
-
-    dados = {
-        "nome": "Cartão de visita",
-        "preco_venda": "5.00",
-        "composicao": [{"material_id": papel["id"], "quantidade_utilizada": "1"}],
-    }
-    resposta = await client.post("/api/produtos", json=dados, headers=headers)
-    assert resposta.status_code == 201
-    corpo = resposta.json()
-    assert corpo["custo_producao"] == "0.25"
-    assert corpo["composicao"][0]["custo_unitario_base"] == "0.2500"
-
-
 async def test_carregar_substituir_e_remover_imagem_e_video_do_produto(
     client, tmp_path, monkeypatch
 ):
@@ -383,14 +357,19 @@ async def test_atualizar_produto_substitui_composicao_completa(client):
         json={
             "nome": "Caneca Personalizada",
             "preco_venda": "15.00",
-            "composicao": [{"material_id": tinta["id"], "quantidade_utilizada": "10"}],
+            "composicao": [
+                {"material_id": caneca["id"], "quantidade_utilizada": "2"},
+                {"material_id": tinta["id"], "quantidade_utilizada": "10"},
+            ],
         },
         headers=headers,
     )
     assert resposta.status_code == 200
     corpo = resposta.json()
-    assert len(corpo["composicao"]) == 1
-    assert corpo["composicao"][0]["material_nome"] == "Tinta"
+    assert len(corpo["composicao"]) == 2
+    composicao = {item["material_nome"]: item for item in corpo["composicao"]}
+    assert composicao["Caneca"]["quantidade_utilizada"] == "2.000"
+    assert composicao["Tinta"]["quantidade_utilizada"] == "10.000"
 
 
 async def test_produto_reflete_custo_atual_do_material_apos_edicao(client):

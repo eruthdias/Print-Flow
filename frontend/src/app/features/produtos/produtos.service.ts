@@ -54,10 +54,6 @@ export class ProdutosService {
     return this.http.post<Produto>('/api/produtos', dados);
   }
 
-  atualizar(produtoId: number, dados: ProdutoCreate): Observable<Produto> {
-    return this.http.put<Produto>(`/api/produtos/${produtoId}`, dados);
-  }
-
   excluir(produtoId: number): Observable<void> {
     return this.http.delete<void>(`/api/produtos/${produtoId}`);
   }

@@ -4,7 +4,7 @@
       <h1>Produções</h1>
       <p>Histórico de produções, custos e lucro real.</p>
     </div>
-    <button mat-flat-button type="button" (click)="abrirCriacao()"><mat-icon>add</mat-icon>Nova produção</button>
+    <a mat-flat-button routerLink="/producoes/nova"><mat-icon>add</mat-icon>Nova produção</a>
   </header>
 
   @if (producoes().length) {
@@ -27,7 +27,6 @@
             </dl>
             <div class="acoes-card">
               <a mat-flat-button [routerLink]="['/producoes', producao.id]"><mat-icon>visibility</mat-icon>Detalhar</a>
-              <button mat-button type="button" (click)="abrirEdicao(producao)"><mat-icon>edit</mat-icon>Editar</button>
               <button mat-button type="button" (click)="estornar(producao)"><mat-icon>undo</mat-icon>Estornar</button>
             </div>
           </div>
