@@ -5,7 +5,7 @@
       <p>Consulte produtos, valores, composição e mídias.</p>
     </div>
     <div class="acoes">
-      <a mat-flat-button routerLink="/produtos/novo"><mat-icon>add</mat-icon>Novo produto</a>
+      <button mat-flat-button type="button" (click)="abrirCriacao()"><mat-icon>add</mat-icon>Novo produto</button>
     </div>
   </header>
 
@@ -45,6 +45,9 @@
                   <mat-icon>hide_image</mat-icon>
                 </button>
               }
+              <button mat-stroked-button type="button" (click)="abrirEdicao(produto)">
+                <mat-icon>edit</mat-icon>Editar
+              </button>
               <button mat-stroked-button class="botao-excluir" type="button" (click)="excluir(produto)" [disabled]="estaExcluindo(produto.id)">
                 <mat-icon>delete_outline</mat-icon>{{ estaExcluindo(produto.id) ? 'Excluindo...' : 'Excluir' }}
               </button>

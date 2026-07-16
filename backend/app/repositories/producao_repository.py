@@ -56,6 +56,11 @@ async def salvar_novo(db: AsyncSession, producao: Producao) -> Producao:
     return await obter_por_id(db, producao.id)
 
 
+async def salvar(db: AsyncSession, producao: Producao) -> Producao:
+    await db.commit()
+    return await obter_por_id(db, producao.id)
+
+
 async def excluir(db: AsyncSession, producao: Producao) -> None:
     await db.delete(producao)
     await db.commit()

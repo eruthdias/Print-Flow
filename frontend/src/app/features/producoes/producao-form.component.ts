@@ -1,7 +1,6 @@
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject, signal } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,7 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { finalize } from 'rxjs';
 import { FeedbackService } from '../../core/feedback.service';
 import { ComposicaoProduto, Produto, ProdutosService } from '../produtos/produtos.service';
-import { ProducoesService } from './producoes.service';
+import { Producao, ProducoesService } from './producoes.service';
 
 type PerdaForm = FormGroup<{
   material_id: FormControl<number>;
@@ -22,18 +21,21 @@ type PerdaForm = FormGroup<{
 @Component({
   selector: 'app-producao-form',
   standalone: true,
-  imports: [CurrencyPipe, DecimalPipe, ReactiveFormsModule, RouterLink, MatButtonModule, MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule],
+  imports: [CurrencyPipe, DecimalPipe, ReactiveFormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule],
   templateUrl: './producao-form.component.html',
   styleUrl: './producao-form.component.scss',
 })
 export class ProducaoFormComponent implements OnInit {
+  @Input() producao?: Producao;
+  @Output() readonly salvo = new EventEmitter<void>();
   private readonly produtosService = inject(ProdutosService);
   private readonly service = inject(ProducoesService);
   private readonly feedback = inject(FeedbackService);
-  private readonly router = inject(Router);
+  private producaoId?: number;
 
   protected readonly produtos = signal<Produto[]>([]);
   protected readonly enviando = signal(false);
+  protected readonly editando = signal(false);
   protected readonly form = new FormGroup({
     produto_id: new FormControl<number | null>(null, Validators.required),
     quantidade_produzida: new FormControl(1, { nonNullable: true, validators: [Validators.required, Validators.min(.001)] }),
@@ -43,12 +45,35 @@ export class ProducaoFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.produtosService.listar().subscribe({
-      next: ({ items }) => this.produtos.set(items.filter((produto) => produto.ativo)),
+      next: ({ items }) => {
+        this.produtos.set(items.filter((produto) => produto.ativo || produto.id === this.producao?.produto_id));
+        if (this.producao) { this.preencherParaEdicao(this.producao); }
+      },
       error: (erro) => this.feedback.erro(
         this.feedback.mensagemErro(erro, 'Não foi possível carregar os produtos.'),
       ),
     });
-    this.form.controls.produto_id.valueChanges.subscribe(() => this.montarDesperdicios());
+    this.form.controls.produto_id.valueChanges.subscribe(() => {
+      if (!this.editando()) { this.montarDesperdicios(); }
+    });
+  }
+
+  private preencherParaEdicao(producao: Producao): void {
+    this.producaoId = producao.id;
+    this.editando.set(true);
+    this.form.patchValue({ produto_id: producao.produto_id }, { emitEvent: false });
+    this.montarDesperdicios();
+    const perdasExistentes = new Map(producao.desperdicios.map((item) => [item.material_id, item]));
+    for (const perda of this.form.controls.desperdicios.controls) {
+      const existente = perdasExistentes.get(perda.controls.material_id.value);
+      if (existente) {
+        perda.patchValue({ quantidade_perdida: existente.quantidade_perdida, motivo: existente.motivo });
+      }
+    }
+    this.form.patchValue({
+      quantidade_produzida: producao.quantidade_produzida,
+      data_producao: producao.data_producao,
+    });
   }
 
   protected material(perda: PerdaForm): ComposicaoProduto | undefined {
@@ -112,21 +137,29 @@ export class ProducaoFormComponent implements OnInit {
       .filter((item) => item.quantidade_perdida > 0)
       .map((item) => ({ ...item, motivo: item.motivo.trim() }));
 
-    this.enviando.set(true);
-    this.service.criar({
+    const payload = {
       produto_id: Number(dados.produto_id),
       quantidade_produzida: dados.quantidade_produzida,
       ...(dados.data_producao ? { data_producao: dados.data_producao } : {}),
       desperdicios,
-    }).pipe(finalize(() => this.enviando.set(false))).subscribe({
-      next: () => {
-        this.feedback.sucesso('Produção registrada e estoque atualizado com sucesso.');
-        this.router.navigate(['/producoes']);
-      },
-      error: (erro) => this.feedback.erro(
-        this.feedback.mensagemErro(erro, 'Não foi possível registrar a produção.'),
-      ),
-    });
+    };
+
+    this.enviando.set(true);
+    (this.producaoId ? this.service.atualizar(this.producaoId, payload) : this.service.criar(payload))
+      .pipe(finalize(() => this.enviando.set(false)))
+      .subscribe({
+        next: () => {
+          this.feedback.sucesso(
+            this.producaoId
+              ? 'Produção atualizada e estoque ajustado com sucesso.'
+              : 'Produção registrada e estoque atualizado com sucesso.',
+          );
+          this.salvo.emit();
+        },
+        error: (erro) => this.feedback.erro(
+          this.feedback.mensagemErro(erro, 'Não foi possível salvar a produção.'),
+        ),
+      });
   }
 
   private produtoSelecionado(): Produto | undefined {

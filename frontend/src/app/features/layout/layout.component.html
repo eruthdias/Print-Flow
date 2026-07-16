@@ -6,7 +6,7 @@
     </div>
     <mat-nav-list>
       @for (item of itensMenu; track item.rota) {
-        <a mat-list-item [routerLink]="item.rota" routerLinkActive="ativo">
+        <a mat-list-item [routerLink]="item.rota" routerLinkActive="ativo" [routerLinkActiveOptions]="{ exact: true }">
           <mat-icon matListItemIcon>{{ item.icone }}</mat-icon>
           <span matListItemTitle>{{ item.rotulo }}</span>
         </a>

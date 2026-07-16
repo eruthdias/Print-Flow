@@ -64,6 +64,10 @@ export class ProducoesService {
     return this.http.post<Producao>('/api/producoes', dados);
   }
 
+  atualizar(producaoId: number, dados: ProducaoCreate): Observable<Producao> {
+    return this.http.put<Producao>(`/api/producoes/${producaoId}`, dados);
+  }
+
   estornar(producaoId: number): Observable<void> {
     return this.http.delete<void>(`/api/producoes/${producaoId}`);
   }

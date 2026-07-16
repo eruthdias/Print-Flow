@@ -15,7 +15,7 @@ class MaterialCreateRequest(BaseModel):
     nome: str
     unidade_compra: UnidadeMedida
     unidade_base: UnidadeMedida
-    fator_conversao: Decimal = Field(default=Decimal("1"), gt=0)
+    fator_conversao: Decimal = Field(gt=0)
     valor_compra: Decimal = Field(ge=0)
     quantidade_atual: Decimal = Field(default=Decimal("0"), ge=0)
     quantidade_minima: Decimal = Field(default=Decimal("0"), ge=0)
@@ -32,7 +32,7 @@ class MaterialUpdateRequest(BaseModel):
     nome: str
     unidade_compra: UnidadeMedida
     unidade_base: UnidadeMedida
-    fator_conversao: Decimal = Field(default=Decimal("1"), gt=0)
+    fator_conversao: Decimal = Field(gt=0)
     valor_compra: Decimal = Field(ge=0)
     quantidade_minima: Decimal = Field(default=Decimal("0"), ge=0)
 

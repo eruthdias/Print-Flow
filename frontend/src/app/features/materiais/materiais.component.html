@@ -6,7 +6,7 @@
     </div>
     <div class="acoes">
       <a mat-stroked-button routerLink="/materiais/ajuste"><mat-icon>tune</mat-icon>Ajustar estoque</a>
-      <a mat-flat-button routerLink="/materiais/novo"><mat-icon>add</mat-icon>Novo material</a>
+      <button mat-flat-button type="button" (click)="abrirCriacao()"><mat-icon>add</mat-icon>Novo material</button>
     </div>
   </header>
 
@@ -31,6 +31,9 @@
               <div><dt>Custo unitário</dt><dd>{{ material.custo_unitario_base | currency:'BRL':'symbol':'1.2-4' }}</dd></div>
             </dl>
             <div class="acoes-card">
+              <button mat-stroked-button type="button" (click)="abrirEdicao(material)">
+                <mat-icon>edit</mat-icon>Editar
+              </button>
               <button mat-stroked-button class="botao-excluir" type="button" (click)="excluir(material)" [disabled]="estaExcluindo(material.id)">
                 <mat-icon>delete_outline</mat-icon>{{ estaExcluindo(material.id) ? 'Excluindo...' : 'Excluir' }}
               </button>

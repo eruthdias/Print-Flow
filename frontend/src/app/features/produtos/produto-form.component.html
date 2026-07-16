@@ -1,5 +1,5 @@
 <mat-card class="painel cadastro">
-  <mat-card-header><mat-card-title>Novo Produto</mat-card-title></mat-card-header>
+  <mat-card-header><mat-card-title>{{ editando() ? 'Editar Produto' : 'Novo Produto' }}</mat-card-title></mat-card-header>
   <mat-card-content>
     <form [formGroup]="form" (ngSubmit)="salvar()">
       <div class="topo">
@@ -62,7 +62,7 @@
         <div [class.negativo]="lucroPrevisto() < 0"><span>Lucro previsto</span><strong>{{ lucroPrevisto() | currency:'BRL' }}</strong></div>
       </div>
       @if (erro()) { <p class="erro">{{ erro() }}</p> }
-      <div class="acoes"><button mat-flat-button type="submit" [disabled]="enviando()">Salvar Produto</button></div>
+      <div class="acoes"><button mat-flat-button type="submit" [disabled]="enviando()">{{ editando() ? 'Salvar alterações' : 'Salvar Produto' }}</button></div>
     </form>
   </mat-card-content>
 </mat-card>

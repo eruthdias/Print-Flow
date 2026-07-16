@@ -1,13 +1,5 @@
-<section class="page-shell form-page">
-  <header class="page-header">
-    <div>
-      <h1>Nova produção</h1>
-      <p>O consumo normal e os desperdícios baixam o estoque automaticamente.</p>
-    </div>
-    <a mat-button routerLink="/producoes"><mat-icon>arrow_back</mat-icon>Voltar</a>
-  </header>
-
   <mat-card class="painel">
+    <mat-card-header><mat-card-title>{{ editando() ? 'Editar Produção' : 'Nova Produção' }}</mat-card-title></mat-card-header>
     <mat-card-content>
       <form [formGroup]="form" (ngSubmit)="salvar()">
         <div class="campos-principais">
@@ -88,10 +80,9 @@
 
         <div class="acoes">
           <button mat-flat-button type="submit" [disabled]="enviando()">
-            {{ enviando() ? 'Registrando...' : 'Registrar produção' }}
+            {{ enviando() ? 'Salvando...' : (editando() ? 'Salvar alterações' : 'Registrar produção') }}
           </button>
         </div>
       </form>
     </mat-card-content>
   </mat-card>
-</section>
